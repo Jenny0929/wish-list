@@ -152,15 +152,16 @@ print(f"上传了 {len(result)} 个文档")
 如果需要使用向量搜索功能，需要生成内容的向量嵌入：
 
 ```python
-import openai
+from openai import OpenAI
 
 def generate_embedding(text: str) -> list:
     """使用 OpenAI API 生成文本嵌入"""
-    response = openai.Embedding.create(
+    client = OpenAI()  # 从环境变量 OPENAI_API_KEY 读取密钥
+    response = client.embeddings.create(
         model="text-embedding-ada-002",
         input=text
     )
-    return response['data'][0]['embedding']
+    return response.data[0].embedding
 
 # 为每个文档生成向量
 for doc in documents:

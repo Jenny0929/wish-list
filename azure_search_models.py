@@ -38,10 +38,10 @@ class CourseKnowledgeDocument:
     def __post_init__(self):
         """Generate ID if not provided."""
         if self.id is None:
-            # Generate ID from course_id and knowledge_point
+            # Generate ID from course_id and knowledge_point using SHA-256
             import hashlib
             hash_input = f"{self.course_id}_{self.knowledge_point}".encode('utf-8')
-            self.id = hashlib.md5(hash_input).hexdigest()
+            self.id = hashlib.sha256(hash_input).hexdigest()[:32]  # Use first 32 chars for readability
     
     def to_dict(self) -> dict:
         """Convert the document to a dictionary for Azure AI Search."""

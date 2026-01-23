@@ -138,24 +138,29 @@ class AzureSearchUploader:
             print(f"✗ 从文件加载失败: {str(e)}")
             return False
     
-    def search(self, query: str, top: int = 5) -> List[dict]:
+    def search(self, query: str, top: int = 5, select_fields: Optional[List[str]] = None) -> List[dict]:
         """
         执行搜索查询
         
         Args:
             query: 搜索查询文本
             top: 返回结果数量
+            select_fields: 要返回的字段列表，默认返回主要字段
             
         Returns:
             搜索结果列表
         """
         print(f"\n搜索查询: '{query}'")
         
+        # 使用默认字段如果未指定
+        if select_fields is None:
+            select_fields = ["course_id", "knowledge_point", "content_summary", "keywords"]
+        
         try:
             results = self.search_client.search(
                 search_text=query,
                 top=top,
-                select=["course_id", "knowledge_point", "content_summary", "keywords"]
+                select=select_fields
             )
             
             result_list = []
@@ -262,9 +267,11 @@ def main():
     print("\n" + "="*60)
     print("步骤 4: 测试搜索功能")
     print("="*60)
-    print("等待几秒让索引更新...")
+    # 等待索引更新 (Azure Search 通常需要几秒钟)
+    INDEX_UPDATE_WAIT_SECONDS = 3
+    print(f"等待 {INDEX_UPDATE_WAIT_SECONDS} 秒让索引更新...")
     import time
-    time.sleep(3)
+    time.sleep(INDEX_UPDATE_WAIT_SECONDS)
     
     # 执行几个示例搜索
     test_queries = ["Python", "函数", "机器学习"]
