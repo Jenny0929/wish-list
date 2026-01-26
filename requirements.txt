@@ -1,0 +1,6 @@
+# Azure AI Search 相关依赖
+azure-search-documents>=11.4.0
+azure-core>=1.29.0
+
+# 可选: 用于生成向量嵌入
+# openai>=1.0.0
